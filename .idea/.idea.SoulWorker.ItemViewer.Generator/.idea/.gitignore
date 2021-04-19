@@ -1,0 +1,13 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/modules.xml
+/contentModel.xml
+/projectSettingsUpdater.xml
+/.idea.SoulWorker.ItemViewer.Generator.iml
+# Datasource local storage ignored files
+/../../../../../../../../../../:\Users\sawic\source\repos\sawich\SoulWorker.ItemViewer.Generator\.idea\.idea.SoulWorker.ItemViewer.Generator\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
