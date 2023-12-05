@@ -1,48 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
+using ICSharpCode.SharpZipLib.Zip;
 using Microsoft.Extensions.Configuration;
-using SoulWorkerResearch.SoulCore.IO.Datas.Bin.Table.Entities;
-using SoulWorkerResearch.SoulCore.Korean.IO.Datas.Bin;
-using SoulWorkerResearch.SoulCore.Types;
+using SoulWorker.ItemViewer.Generator.DataTypes.KR;
+using SoulWorkerResearch.SoulCore.IO;
+using SoulWorkerResearch.SoulCore.IO.ResTable;
 
 namespace SoulWorker.ItemViewer.Generator
 {
     public static class Program
     {
-        public static Task Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var configuration = GetConfiguration();
 
             var outDir = configuration["OutDir"];
             var gameDir = configuration["GameDir"];
+            var password = configuration["Data12Pass"];
 
-            var data12Path = Path.Join(gameDir, "datas", "data12.v"); 
-            
-            using BinReader table = new(data12Path, configuration["Data12Pass"]);
+            var data12Path = Path.Join(gameDir, "datas", "data12.v");
 
-            IDictionary<uint, ItemEntity> itemsTable = table.ReadItemTable();
-            IDictionary<uint, ItemClassifyEntity> itemClassifyTable = table.ReadItemClassifyTable();
-            IDictionary<uint, ItemScriptEntity> itemScriptTable = table.ReadItemScriptTable();
+            var zip = EncryptedZipFile.Create(data12Path, password);
+            var reader = new ArchiveReader(zip);
 
-            IEnumerable<ItemClassifyInventoryType> inventoryTypes =
-                itemClassifyTable.Values.Select(entity => entity.InventoryType).Distinct().OrderBy(s => s);
-            
-            IEnumerable<ItemClassifySlotType> slotTypes =
-                itemClassifyTable.Values.Select(entity => entity.SlotType).Distinct().OrderBy(s => s);
-            
-            IEnumerable<byte> gainTypes = itemClassifyTable.Values.Select(s => s.GainType).Distinct().OrderBy(s => s);
+            var itemClassifyTable = await reader.ReadEntriesAsync<ItemClassifyEntity>(default).ToDictionaryAsync(e => e.Id, e => e);
+            var itemScriptTable = await reader.ReadEntriesAsync<ItemScriptEntry>(default).ToDictionaryAsync(e => e.Id, e => e);
+            var itemsTable = await reader.ReadEntriesAsync<ItemResource>(default).ToDictionaryAsync(e => e.Id, e => e);
+
+            var inventoryTypes = itemClassifyTable.Values.Select(entity => entity.InventoryType).Distinct().OrderBy(s => s);
+            var slotTypes = itemClassifyTable.Values.Select(entity => entity.SlotType).Distinct().OrderBy(s => s);
+            var gainTypes = itemClassifyTable.Values.Select(s => s.GainType).Distinct().OrderBy(s => s);
 
             var data = itemsTable.Values
                 .Select(i =>
                 {
                     ItemClassifyEntity classify = itemClassifyTable[i.ClassifyId];
 
-                    if (itemScriptTable.TryGetValue(i.Id, out ItemScriptEntity? script))
+                    if (itemScriptTable.TryGetValue(i.Id, out ItemScriptEntry? script))
                     {
                         return new
                         {
@@ -76,7 +77,7 @@ namespace SoulWorker.ItemViewer.Generator
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             };
 
-            return Task.WhenAll(
+            await Task.WhenAll(
                 File.WriteAllTextAsync(Path.Join(outDir, "data.json"), JsonSerializer.Serialize(data, options)),
                 File.WriteAllTextAsync(Path.Join(outDir, "inventoryTypes.json"),
                     JsonSerializer.Serialize(inventoryTypes, options)),
@@ -92,3 +93,5 @@ namespace SoulWorker.ItemViewer.Generator
             .Build();
     }
 }
+
+// https://youtu.be/pOjMRP34sBs
