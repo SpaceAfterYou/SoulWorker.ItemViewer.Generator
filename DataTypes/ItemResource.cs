@@ -1,93 +1,18 @@
 ﻿using SoulWorkerResearch.SoulCore;
 using SoulWorkerResearch.SoulCore.Defines;
 using SoulWorkerResearch.SoulCore.Extensions;
-using SoulWorkerResearch.SoulCore.IO.ResTable;
 using SoulWorkerResearch.SoulCore.Utils;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace SoulWorker.ItemViewer.Generator.DataTypes.KR;
-
-using ItemScriptKeyType = System.UInt32;
-using ItemClassifyKeyType = System.UInt32;
 using ItemKeyType = System.UInt32;
 
-public sealed class ItemScriptEntry : IEntry<ItemScriptEntry>
+namespace SoulWorker.ItemViewer.Generator.DataTypes;
+
+public abstract class ItemResource(BinaryReader reader)
 {
-    static string IEntry<ItemScriptEntry>.TableName => "tb_item_script";
-
-    public ItemScriptKeyType Id { get; }
-    public string Icon { get; }
-    public string Unknown6 { get; }
-    public string Unknown7 { get; }
-    public string Unknown8 { get; }
-    public string Unknown9 { get; }
-    public string Unknown10 { get; }
-    public byte Unknown11 { get; }
-    public byte Unknown12 { get; }
-    public byte Unknown13 { get; }
-    public byte Unknown14 { get; }
-    public byte Unknown15 { get; }
-    public string Name { get; }
-    public string Description { get; }
-
-    public ItemScriptEntry(BinaryReader reader)
-    {
-        Id = reader.ReadUInt32();
-        Icon = reader.ReadUTF16UnicodeString();
-        Unknown6 = reader.ReadUTF16UnicodeString();
-        Unknown7 = reader.ReadUTF16UnicodeString();
-        Unknown8 = reader.ReadUTF16UnicodeString();
-        Unknown9 = reader.ReadUTF16UnicodeString();
-        Unknown10 = reader.ReadUTF16UnicodeString();
-        Unknown11 = reader.ReadByte();
-        Unknown12 = reader.ReadByte();
-        Unknown13 = reader.ReadByte();
-        Unknown14 = reader.ReadByte();
-        Unknown15 = reader.ReadByte();
-        Name = reader.ReadUTF16UnicodeString();
-        Description = reader.ReadUTF16UnicodeString();
-    }
-}
-
-public sealed class ItemClassifyEntity(BinaryReader reader) : IEntry<ItemClassifyEntity>
-{
-    public const string TableName = "tb_Item_Classify";
-    static string IEntry<ItemClassifyEntity>.TableName => TableName;
-
-    public sealed record ActionInfo(string Move, string Drop, string Equip, string Unequip);
-
-    public ItemClassifyKeyType Id { get; } = reader.ReadUInt32();
-    public byte Group { get; } = reader.ReadByte();
-    public ushort Unknown6 { get; } = reader.ReadUInt16();
-    public byte SubGroup { get; } = reader.ReadByte();
-    public ushort Unknown8 { get; } = reader.ReadUInt16();
-    public byte Category { get; } = reader.ReadByte();
-    public ushort Unknown10 { get; } = reader.ReadUInt16();
-    public byte SubCategory { get; } = reader.ReadByte();
-    public ushort Unknown12 { get; } = reader.ReadUInt16();
-    public byte GainType { get; } = reader.ReadByte();
-    public ItemClassifyInventoryType InventoryType { get; } = reader.ReadItemClassifyInventoryType();
-    public ItemClassifySlotType SlotType { get; } = reader.ReadItemClassifySlotType();
-    public byte RepairType { get; } = reader.ReadByte();
-    public byte UseState { get; } = reader.ReadByte();
-    public byte UseType { get; } = reader.ReadByte();
-    public byte ConsumeType { get; } = reader.ReadByte();
-    public ushort Unknown20 { get; } = reader.ReadUInt16();
-    public ushort SocketId { get; } = reader.ReadUInt16();
-    public ushort Unknown22 { get; } = reader.ReadUInt16();
-    public ActionInfo Action { get; } = new(
-            reader.ReadUTF16UnicodeString(),
-            reader.ReadUTF16UnicodeString(),
-            reader.ReadUTF16UnicodeString(),
-            reader.ReadUTF16UnicodeString());
-    public short Unknown27 { get; } = reader.ReadInt16();
-}
-
-public sealed class ItemResource(BinaryReader reader) : IEntry<ItemResource>
-{
-    static string IEntry<ItemResource>.TableName => "tb_item";
+    public const string TableName = "tb_item";
 
     public sealed record Specification(uint Min, uint Max, uint Magic);
     public sealed record Option(byte Class, uint Type, int Value);
@@ -140,13 +65,13 @@ public sealed class ItemResource(BinaryReader reader) : IEntry<ItemResource>
     public uint Unknown68 { get; } = reader.ReadUInt32();
     public byte SealingCnt { get; } = reader.ReadByte();
     public byte BreakCnt { get; } = reader.ReadByte();
-    public uint SimilarGroup { get; } = reader.ReadUInt32();
-    public uint Package { get; } = reader.ReadUInt32();
+    public int SimilarGroup { get; } = reader.ReadInt32();
+    public int Package { get; } = reader.ReadInt32();
     public int Unknown76 { get; } = reader.ReadInt32();
     public int Unknown77 { get; } = reader.ReadInt32();
     public int Unknown78 { get; } = reader.ReadInt32();
     public int Unknown79 { get; } = reader.ReadInt32();
-    public int Unknown { get; } = reader.ReadUInt16();
+    public ushort Unknown { get; } = reader.ReadUInt16();
 
     private static Option[] ReadOptions(BinaryReader reader)
     {
