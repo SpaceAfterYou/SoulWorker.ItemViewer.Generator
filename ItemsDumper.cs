@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SoulWorker.ItemViewer.Generator.DataTypes;
 
 using ItemClassifyTable = System.Collections.Generic.Dictionary<uint, SoulWorker.ItemViewer.Generator.DataTypes.ItemClassifyResource>;
-using KoreanItemScriptTable = System.Collections.Generic.Dictionary<uint, SoulWorker.ItemViewer.Generator.DataTypes.Korean_ItemScriptResource>;
+using KoreanItemScriptTable = System.Collections.Generic.Dictionary<uint, SoulWorker.ItemViewer.Generator.DataTypes.KOR.Korean_ItemScriptResource>;
 using ItemsTable = System.Collections.Generic.Dictionary<uint, SoulWorker.ItemViewer.Generator.DataTypes.ItemResource>;
+using SoulWorker.ItemViewer.Generator.DataTypes.KOR;
 
 namespace SoulWorker.ItemViewer.Generator
 {

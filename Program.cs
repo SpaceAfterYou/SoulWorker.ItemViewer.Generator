@@ -5,8 +5,8 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using SoulWorker.ItemViewer.Generator.DataTypes;
-using SoulWorker.ItemViewer.Generator.DataTypes.GLB;
-using SoulWorker.ItemViewer.Generator.DataTypes.KR;
+using SoulWorker.ItemViewer.Generator.DataTypes.ENG;
+using SoulWorker.ItemViewer.Generator.DataTypes.KOR;
 using SoulWorker.ItemViewer.Generator.DataTypes.TWN;
 using SoulWorkerResearch.SoulCore.IO;
 using SoulWorkerResearch.SoulCore.IO.ResTable;
@@ -21,16 +21,16 @@ namespace SoulWorker.ItemViewer.Generator
 
             var kr = new
             {
-                GameDir = configuration["Kr:GameDir"],
-                DataPass = configuration["Kr:DataPass"],
-                DataPath = configuration["Kr:DataPath"],
+                GameDir = configuration["Kor:GameDir"],
+                DataPass = configuration["Kor:DataPass"],
+                DataPath = configuration["Kor:DataPath"],
             };
 
             var en = new
             {
-                GameDir = configuration["En:GameDir"],
-                DataPass = configuration["En:DataPass"],
-                DataPath = configuration["En:DataPath"],
+                GameDir = configuration["Eng:GameDir"],
+                DataPass = configuration["Eng:DataPass"],
+                DataPath = configuration["Eng:DataPath"],
             };
 
             var frontDir = configuration["FrontDir"];
