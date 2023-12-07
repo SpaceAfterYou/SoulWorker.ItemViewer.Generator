@@ -68,11 +68,11 @@ namespace SoulWorker.ItemViewer.Generator
             var localeDir = Path.Join(frontDir, "src", "locales", "messages");
 
             await Task.WhenAll(
-                File.WriteAllTextAsync(Path.Join(localeDir, "kr.json"), JsonSerializer.Serialize(krLocaleDumper.Dump(), options)),
-                File.WriteAllTextAsync(Path.Join(localeDir, "en.json"), JsonSerializer.Serialize(enLocaleDumper.Dump(), options)),
-                File.WriteAllTextAsync(Path.Join(localeDir, "twn.json"), JsonSerializer.Serialize(twnLocaleDumper.Dump(), options)),
+                File.WriteAllTextAsync(Path.Join(localeDir, "kor", "items.json"), JsonSerializer.Serialize(krLocaleDumper.Dump(), options)),
+                File.WriteAllTextAsync(Path.Join(localeDir, "eng", "items.json"), JsonSerializer.Serialize(enLocaleDumper.Dump(), options)),
+                File.WriteAllTextAsync(Path.Join(localeDir, "twn", "items.json"), JsonSerializer.Serialize(twnLocaleDumper.Dump(), options)),
 
-                File.WriteAllTextAsync(Path.Join(frontDir, "public", "data.json"), JsonSerializer.Serialize(itemsDumper.Dump(), options)),
+                File.WriteAllTextAsync(Path.Join(frontDir, "public", "items.json"), JsonSerializer.Serialize(itemsDumper.Dump(), options)),
                 File.WriteAllTextAsync(Path.Join(frontDir, "public", "inventoryTypes.json"), JsonSerializer.Serialize(inventoryTypes, options)),
                 File.WriteAllTextAsync(Path.Join(frontDir, "public", "slotTypes.json"), JsonSerializer.Serialize(slotTypes, options)),
                 File.WriteAllTextAsync(Path.Join(frontDir, "public", "gainTypes.json"), JsonSerializer.Serialize(gainTypes, options)));
