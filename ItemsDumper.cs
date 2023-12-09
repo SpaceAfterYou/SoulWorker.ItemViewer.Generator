@@ -11,7 +11,7 @@ namespace SoulWorker.ItemViewer.Generator
 {
     public class ItemsDumper(ItemsTable itemsTable, ItemClassifyTable itemClassifyTable, KoreanItemScriptTable itemScriptTable)
     {
-        public IEnumerable<ItemsData> Dump() => itemsTable.Values
+        public IEnumerable<ItemsData[]> Dump() => itemsTable.Values
             .Select(i =>
             {
                 var classify = itemClassifyTable.GetValueOrDefault(i.ClassifyId);
@@ -40,7 +40,8 @@ namespace SoulWorker.ItemViewer.Generator
                     i.Class
                 };
             })
-            .Select(e => new ItemsData(e.Id, e.SlotType, e.InventoryType, e.GainType, e.Icon, e.Class));
+            .Select(e => new ItemsData(e.Id, e.SlotType, e.InventoryType, e.GainType, e.Icon, e.Class))
+            .Chunk(100);
     }
 }
 
