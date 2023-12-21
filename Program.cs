@@ -63,6 +63,7 @@ namespace SoulWorker.ItemViewer.Generator
             {
                 Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = true,
             };
 
             var localeDir = Path.Join(frontDir, "locale");
